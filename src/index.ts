@@ -130,7 +130,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     try {
         const header = newDocument.querySelector('.header-promo-row');
         console.log(header)
-        if(header) {
+        if(header?.children.length && header?.children.length > 0) {
             newDocument.querySelector('.header-promo-close-button')?.dispatchEvent(new Event('click'));
         }
     } catch(err) {
