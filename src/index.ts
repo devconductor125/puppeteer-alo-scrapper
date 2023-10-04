@@ -123,10 +123,24 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
     await newPage.setViewport({ width: 1024, height: 1024 });
 
+    const newData = await newPage.content()
+    const newDom = new JSDOM(newData)
+    const newDocument = newDom.window.document
+
+    try {
+        const header = newDocument.querySelector('.header-promo-row');
+        console.log(header)
+        if(header) {
+            newDocument.querySelector('.header-promo-close-button')?.dispatchEvent(new Event('click'));
+        }
+    } catch(err) {
+        console.log("error: ", err)
+    }
+
     // scroll down 
     await newPage.evaluate(() => {
         let scroll_location = 0
-        const scrollHeight = document.body.scrollHeight
+        const scrollHeight = newDocument.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
                 const scroll_amount = 100
@@ -144,7 +158,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
     //and then up
     await newPage.evaluate(() => {
-        let scroll_location = document.body.scrollHeight
+        let scroll_location = newDocument.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
                 window.scrollTo(0, 0)
@@ -163,7 +177,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
         await newPage.evaluate(() => {
             let scroll_location = 0
-            const scrollHeight = document.body.scrollHeight
+            const scrollHeight = newDocument.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
                     const scroll_amount = 100
@@ -178,7 +192,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         });
 
         await newPage.evaluate(() => {
-            let scroll_location = document.body.scrollHeight
+            let scroll_location = newDocument.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
                     const scroll_amount = 30
