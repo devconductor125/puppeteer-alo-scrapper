@@ -70,26 +70,27 @@ async function pageScrolling(page: Page, currentScroll: number): Promise<boolean
 
     const data = await page.content()
     const dom = new JSDOM(data)
-    
     const document = dom.window.document
 
     await page.evaluate(() => {
         let scroll_location = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
-                const scroll_amount = 200
+                const scroll_amount = 100
                 window.scrollBy(0, -scroll_amount)
                 scroll_location -= scroll_amount
                 if (scroll_location <= 0) {
                     clearInterval(scrollInterval)
                     resolve()
                 }
-            }, 250)
+            }, 300)
         })
     });
-    delayMs(5000);
 
     const urlSearchParams = new URLSearchParams(dom.window.location.search);
+
+    console.log(urlSearchParams);
+
     const startPageValue = Number(urlSearchParams.get("start")??0);
     if (startPageValue>0) {
         return true;
