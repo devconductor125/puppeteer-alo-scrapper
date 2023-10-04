@@ -18,7 +18,7 @@ async function scrapeItem(item: Element, browser: Browser, productType: ProductT
             waitUntil: "load",
             timeout: 0,
         })
-        await page.setViewport({ width: 1440, height: 1024 })
+        await page.setViewport({ width: 1024, height: 1024 })
         delayMs(3000);
 
         const data = await page.content()
@@ -87,6 +87,8 @@ async function pageScrolling(page: Page, currentScroll: number): Promise<boolean
         })
     });
 
+    console.log(dom.window)
+
     const urlSearchParams = new URLSearchParams(dom.window.location.search);
 
     console.log(urlSearchParams);
@@ -107,7 +109,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         waitUntil: "load",
         timeout: 0,
     })
-    await page.setViewport({ width: 1440, height: 1024 })
+    await page.setViewport({ width: 1024, height: 1024 })
 
     const data = await page.content()
     const dom = new JSDOM(data)
@@ -130,7 +132,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         timeout: 0,
     });
 
-    await newPage.setViewport({ width: 1440, height: 1024 });
+    await newPage.setViewport({ width: 1024, height: 1024 });
 
     // scroll down 
     await newPage.evaluate(() => {
