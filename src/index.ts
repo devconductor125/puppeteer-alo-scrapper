@@ -121,7 +121,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const allProuducts = document.querySelector('span.js-change-num')?.textContent;
 
     // Calculating start point
-    const startProduct = Math.floor((Number(allProuducts)- 1)/12) * 12;
+    let startProduct = Math.floor((Number(allProuducts)- 1)/12) * 12;
     console.log('Start at', startProduct);
 
 
@@ -174,6 +174,8 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         let scroll_location = document.body.scrollHeight
         console.log("Accessing next page...")
         loading = await pageScrolling(newPage, scroll_location)
+        startProduct -= 12;
+        if(startProduct <= 0) loading = false;
     }
 
     // await scrapingProducts(browser, newPage, productType);
