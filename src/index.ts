@@ -160,9 +160,28 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
 
     while (loading) {
-        let scroll_location = document.body.scrollHeight
         console.log("Accessing next page...")
-        await pageScrolling(newPage, scroll_location)
+
+        // let scroll_location = document.body.scrollHeight
+        // await pageScrolling(newPage, scroll_location)
+
+        await newPage.evaluate(() => {
+            let scroll_location = document.body.scrollHeight
+            return new Promise<void>((resolve, reject) => {
+                const scrollInterval = setInterval(() => {
+                    const scroll_amount = 100
+                    window.scrollBy(0, -scroll_amount)
+                    scroll_location -= scroll_amount
+                    if (scroll_location <= 0) {
+                        clearInterval(scrollInterval)
+                        resolve()
+                    }
+                }, 300)
+            })
+        });
+
+        delayMs(3000);
+
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
     }
