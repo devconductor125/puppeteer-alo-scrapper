@@ -195,7 +195,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         delayMs(3000);
 
 
-        const currentPage = newPage.url().split("?")[1]?.toString()?.split("=")[1];
+        const currentPage = newPage.url().split("?")[1]?.split("=")[1];
         console.log(currentPage)
         if(Number(currentPage) <= 0) loading = false;
     }
