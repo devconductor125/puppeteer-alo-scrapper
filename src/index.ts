@@ -144,16 +144,11 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
     //and then up
     await newPage.evaluate(() => {
-        let scroll_location = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
-                const scroll_amount = 100
-                window.scrollBy(0, -scroll_amount)
-                scroll_location -= scroll_amount
-                if (scroll_location <= 0) {
-                    clearInterval(scrollInterval)
-                    resolve()
-                }
+                window.scrollTo(0, 0)
+                clearInterval(scrollInterval)
+                resolve()
             }, 300)
         })
     });
@@ -166,16 +161,11 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         // await pageScrolling(newPage, scroll_location)
 
         await newPage.evaluate(() => {
-            let scroll_location = document.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    const scroll_amount = 100
-                    window.scrollBy(0, -scroll_amount)
-                    scroll_location -= scroll_amount
-                    if (scroll_location <= 0) {
-                        clearInterval(scrollInterval)
-                        resolve()
-                    }
+                    window.scrollTo(0, 0)
+                    clearInterval(scrollInterval)
+                    resolve()
                 }, 300)
             })
         });
