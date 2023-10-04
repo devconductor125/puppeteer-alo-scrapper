@@ -181,14 +181,14 @@ async function scrapeAllPages(url: string, productType: ProductType) {
             let scroll_location = document.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    const scroll_amount = 100
+                    const scroll_amount = 30
                     window.scrollBy(0, -scroll_amount)
                     scroll_location -= scroll_amount
                     if (scroll_location <= 100) {
                         clearInterval(scrollInterval)
                         resolve()
                     }
-                }, 400)
+                }, 300)
             })
         });
 
