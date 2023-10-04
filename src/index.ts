@@ -87,7 +87,7 @@ async function pageScrolling(page: Page, currentScroll: number): Promise<boolean
         })
     });
 
-    console.log(dom.window.location.href)
+    console.log(dom.window.location)
 
     const urlSearchParams = new URLSearchParams(dom.window.location.search);
 
@@ -140,14 +140,14 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         const scrollHeight = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
-                const scroll_amount = 200
+                const scroll_amount = 100
                 window.scrollBy(0, scroll_amount)
                 scroll_location += scroll_amount
                 if (scroll_location >= scrollHeight - scroll_amount) {
                     clearInterval(scrollInterval)
                     resolve()
                 }
-            }, 250)
+            }, 200)
         })
     });
 
@@ -158,14 +158,14 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         let scroll_location = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
-                const scroll_amount = 200
+                const scroll_amount = 100
                 window.scrollBy(0, -scroll_amount)
                 scroll_location -= scroll_amount
                 if (scroll_location <= 0) {
                     clearInterval(scrollInterval)
                     resolve()
                 }
-            }, 250)
+            }, 300)
         })
     });
 
