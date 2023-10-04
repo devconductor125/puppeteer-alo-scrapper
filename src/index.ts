@@ -140,7 +140,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         })
     });
 
-    delayMs(1000);
+    await delayMs(1000);
 
     //and then up
     await newPage.evaluate(() => {
@@ -166,11 +166,11 @@ async function scrapeAllPages(url: string, productType: ProductType) {
                     window.scrollTo(0, 0)
                     clearInterval(scrollInterval)
                     resolve()
-                }, 300)
+                }, 3000)
             })
         });
 
-        delayMs(3000);
+        await delayMs(3000);
 
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
