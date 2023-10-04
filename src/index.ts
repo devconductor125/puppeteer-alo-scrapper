@@ -184,7 +184,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
                     const scroll_amount = 100
                     window.scrollBy(0, -scroll_amount)
                     scroll_location -= scroll_amount
-                    if (scroll_location <= 0) {
+                    if (scroll_location <= 100) {
                         clearInterval(scrollInterval)
                         resolve()
                     }
@@ -196,6 +196,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
 
         const currentPage = newPage.url().split("?")[1]?.toString()?.split("=")[1];
+        console.log(currentPage)
         if(Number(currentPage) <= 0) loading = false;
     }
 
