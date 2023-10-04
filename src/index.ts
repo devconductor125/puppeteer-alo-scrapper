@@ -121,7 +121,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const allProuducts = document.querySelector('span.js-change-num')?.textContent;
 
     // Calculating start point
-    const startProduct = Math.floor(Number(allProuducts)/12) * 12;
+    const startProduct = Math.floor((Number(allProuducts)- 1)/12) * 12;
     console.log('Start at', startProduct);
 
 
