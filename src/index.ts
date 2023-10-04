@@ -66,7 +66,7 @@ async function scrapingProducts(browser: Browser, page: Page, productType: Produ
     }
 }
 
-async function pageScrolling(page: Page, currentScroll: number): Promise<boolean> {
+async function pageScrolling(page: Page, currentScroll: number){
 
     const data = await page.content()
     const dom = new JSDOM(data)
@@ -87,17 +87,6 @@ async function pageScrolling(page: Page, currentScroll: number): Promise<boolean
         })
     });
 
-    console.log(dom.window.location)
-
-    const urlSearchParams = new URLSearchParams(dom.window.location.search);
-
-    console.log(urlSearchParams);
-
-    const startPageValue = Number(urlSearchParams.get("start")??0);
-    if (startPageValue>0) {
-        return true;
-    }
-    else return false;
 }
 
 async function scrapeAllPages(url: string, productType: ProductType) {
@@ -173,7 +162,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     while (loading) {
         let scroll_location = document.body.scrollHeight
         console.log("Accessing next page...")
-        loading = await pageScrolling(newPage, scroll_location)
+        await pageScrolling(newPage, scroll_location)
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
     }
