@@ -173,7 +173,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
                         clearInterval(scrollInterval)
                         resolve()
                     }
-                }, 200)
+                }, 300)
             })
         });
 
@@ -188,12 +188,14 @@ async function scrapeAllPages(url: string, productType: ProductType) {
                         clearInterval(scrollInterval)
                         resolve()
                     }
-                }, 300)
+                }, 400)
             })
         });
 
         delayMs(3000);
 
+
+        console.log(newPage.url().split("?"))
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
     }
