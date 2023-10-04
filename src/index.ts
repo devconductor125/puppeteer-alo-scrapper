@@ -140,10 +140,11 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         })
     });
 
-    await delayMs(1000);
+    delayMs(1000);
 
     //and then up
     await newPage.evaluate(() => {
+        let scroll_location = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
                 window.scrollTo(0, 0)
@@ -161,26 +162,37 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         // await pageScrolling(newPage, scroll_location)
 
         await newPage.evaluate(() => {
+            let scroll_location = 0
+            const scrollHeight = document.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    window.scrollTo(0, 650)
-                    clearInterval(scrollInterval)
-                    resolve()
-                }, 1000)
+                    const scroll_amount = 100
+                    window.scrollBy(0, scroll_amount)
+                    scroll_location += scroll_amount
+                    if (scroll_location >= 500) {
+                        clearInterval(scrollInterval)
+                        resolve()
+                    }
+                }, 200)
             })
         });
 
         await newPage.evaluate(() => {
+            let scroll_location = document.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    window.scrollTo(0, 50)
-                    clearInterval(scrollInterval)
-                    resolve()
-                }, 3000)
+                    const scroll_amount = 100
+                    window.scrollBy(0, -scroll_amount)
+                    scroll_location -= scroll_amount
+                    if (scroll_location <= 0) {
+                        clearInterval(scrollInterval)
+                        resolve()
+                    }
+                }, 300)
             })
         });
 
-        await delayMs(10000);
+        delayMs(3000);
 
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
