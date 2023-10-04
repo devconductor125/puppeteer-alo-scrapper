@@ -115,11 +115,13 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     delayMs(2000);
 
     // Waiting for get total product number
-    const allProuducts = document.querySelector('span.js-change-num')?.textContent ?? 158;
+    const allProuducts = document.querySelector('span.js-change-num')?.textContent;
 
     // Calculating start point
-    const startProduct = Math.floor(Number(allProuducts)/12);
+    const startProduct = Math.floor(Number(allProuducts)/12) * 12;
     console.log('Start at', startProduct);
+
+
 
     const newPage = await browser.newPage()
     await newPage.goto(url+"?start="+startProduct, {
