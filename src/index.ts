@@ -122,7 +122,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     console.log('Start at', startProduct);
 
     const newPage = await browser.newPage()
-    await newPage.goto(url, {
+    await newPage.goto(url+"?start="+startProduct, {
         waitUntil: "load",
         timeout: 0,
     });
