@@ -87,7 +87,7 @@ async function pageScrolling(page: Page, currentScroll: number): Promise<boolean
         })
     });
 
-    console.log(dom.window)
+    console.log(dom.window.location.href)
 
     const urlSearchParams = new URLSearchParams(dom.window.location.search);
 
