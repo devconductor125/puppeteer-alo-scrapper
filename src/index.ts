@@ -66,8 +66,71 @@ async function scrapingProducts(browser: Browser, page: Page, productType: Produ
     }
 }
 
-async function pageScrolling(page: Page): Promise<boolean> {
+async function pageScrolling(page: Page, currentScroll: number): Promise<boolean> {
+
+    const data = await page.content()
+    const dom = new JSDOM(data)
+    
+    const document = dom.window.document
+
     await page.evaluate(() => {
+        let scroll_location = document.body.scrollHeight
+        return new Promise<void>((resolve, reject) => {
+            const scrollInterval = setInterval(() => {
+                const scroll_amount = 200
+                window.scrollBy(0, -scroll_amount)
+                scroll_location -= scroll_amount
+                if (scroll_location <= 0) {
+                    clearInterval(scrollInterval)
+                    resolve()
+                }
+            }, 250)
+        })
+    });
+    delayMs(5000);
+
+    const urlSearchParams = new URLSearchParams(dom.window.location.search);
+    const startPageValue = Number(urlSearchParams.get("start")??0);
+    if (startPageValue>0) {
+        return true;
+    }
+    else return false;
+}
+
+async function scrapeAllPages(url: string, productType: ProductType) {
+    let loading = true;
+    const browser = await puppeteer.launch({ headless: false })
+    const page = await browser.newPage()
+
+    await page.goto(url, {
+        waitUntil: "load",
+        timeout: 0,
+    })
+    await page.setViewport({ width: 1440, height: 1024 })
+
+    const data = await page.content()
+    const dom = new JSDOM(data)
+    const document = dom.window.document
+
+    delayMs(2000);
+
+    // Waiting for get total product number
+    const allProuducts = document.querySelector('span.js-change-num')?.textContent ?? 158;
+
+    // Calculating start point
+    const startProduct = Math.floor(Number(allProuducts)/12);
+    console.log('Start at', startProduct);
+
+    const newPage = await browser.newPage()
+    await newPage.goto(url, {
+        waitUntil: "load",
+        timeout: 0,
+    });
+
+    await newPage.setViewport({ width: 1440, height: 1024 });
+
+    // scroll down 
+    await newPage.evaluate(() => {
         let scroll_location = 0
         const scrollHeight = document.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
@@ -83,37 +146,36 @@ async function pageScrolling(page: Page): Promise<boolean> {
         })
     });
 
-    const data = await page.content()
-    const dom = new JSDOM(data)
-    const document = dom.window.document
+    delayMs(1000);
 
-    const loadMore = document.querySelector('.LoadingMoreSpinner');
-    if (loadMore) {
-        page.waitForSelector(".LoadingMoreSpinner");
-        return true;
-    }
-    else return false;
-}
+    //and then up
+    await newPage.evaluate(() => {
+        let scroll_location = document.body.scrollHeight
+        return new Promise<void>((resolve, reject) => {
+            const scrollInterval = setInterval(() => {
+                const scroll_amount = 200
+                window.scrollBy(0, -scroll_amount)
+                scroll_location -= scroll_amount
+                if (scroll_location <= 0) {
+                    clearInterval(scrollInterval)
+                    resolve()
+                }
+            }, 250)
+        })
+    });
 
-async function scrapeAllPages(url: string, productType: ProductType) {
-    let loading = true;
-    const browser = await puppeteer.launch({ headless: 'new' })
-    const page = await browser.newPage()
-
-    await page.goto(url, {
-        waitUntil: "load",
-        timeout: 0,
-    })
-    await page.setViewport({ width: 1440, height: 1024 })
 
     while (loading) {
+        let scroll_location = document.body.scrollHeight
         console.log("Accessing next page...")
-        loading = await pageScrolling(page)
+        loading = await pageScrolling(newPage, scroll_location)
     }
 
-    await scrapingProducts(browser, page, productType);
+    // await scrapingProducts(browser, newPage, productType);
 
-    await page.close()
+    await newPage.close();
+    await page.close();
+
     await browser.close()
 }
 
@@ -122,4 +184,8 @@ async function delayMs(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-scrapeAllPages("https://www.aloyoga.com/collections/tees-tanks", ProductType.SHIRT)
+scrapeAllPages("https://www.pacsun.com/mens/shirts/", ProductType.SHIRT)
+
+// scrapeAllPages("https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams", ProductType.SHIRT)
+
+// scrapeAllPages("https://www.pacsun.com/mens/footwear/sneakers/", ProductType.SHOE)
