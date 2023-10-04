@@ -163,14 +163,14 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         await newPage.evaluate(() => {
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    window.scrollTo(0, 0)
+                    window.scrollTo(0, 50)
                     clearInterval(scrollInterval)
                     resolve()
                 }, 3000)
             })
         });
 
-        await delayMs(3000);
+        await delayMs(10000);
 
         startProduct -= 12;
         if(startProduct <= 0) loading = false;
