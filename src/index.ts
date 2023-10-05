@@ -90,7 +90,6 @@ async function pageScrolling(page: Page, currentScroll: number){
 }
 
 async function scrapeAllPages(url: string, productType: ProductType) {
-    let loading = true;
     const browser = await puppeteer.launch({ headless: false })
     const page = await browser.newPage()
 
@@ -115,19 +114,35 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
 
 
+    
+
+
+    await delayMs(1000);
+    
+    scrollPage(browser, url, startProduct);
+
+    await page.close();
+
+    await browser.close()
+}
+
+async function scrollPage (browser: Browser, url: string, startProduct: number) {
+    let loading = true;
+
     const newPage = await browser.newPage()
     await newPage.goto(url+"?start="+startProduct, {
         waitUntil: "load",
         timeout: 0,
     });
-
     await newPage.setViewport({ width: 1024, height: 1024 });
+
 
     const newData = await newPage.content()
     const newDom = new JSDOM(newData)
     const newDocument = await newDom.window.document
 
     console.log("New Document", newDocument);
+
 
     // const header = newDocument.querySelector('.header-promo-close-button');
     // console.log(header)
@@ -152,7 +167,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         })
     });
 
-    delayMs(1000);
+    await delayMs(1000);
 
     //and then up
     await newPage.evaluate(() => {
@@ -215,9 +230,6 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     // await scrapingProducts(browser, newPage, productType);
 
     await newPage.close();
-    await page.close();
-
-    await browser.close()
 }
 
 
