@@ -127,15 +127,10 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const newDom = new JSDOM(newData)
     const newDocument = newDom.window.document
 
-    try {
-
-        const header = newDocument.querySelector('.header-promo-close-button');
-        console.log(header)
-        if(header?.children.length && header?.children.length > 0) {
-            newPage.click(".header-promo-close-button");
-        }
-    } catch(err) {
-        console.log("error: ", err)
+    const header = newDocument.querySelector('.header-promo-close-button');
+    console.log(header)
+    if(header?.children.length && header?.children.length > 0) {
+        newPage.click(".header-promo-close-button");
     }
 
     // scroll down 
