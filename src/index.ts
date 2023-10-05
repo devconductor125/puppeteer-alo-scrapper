@@ -104,7 +104,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const dom = new JSDOM(data)
     const document = dom.window.document
 
-    delayMs(2000);
+    await delayMs(2000);
 
     // Waiting for get total product number
     const allProuducts = document.querySelector('span.js-change-num')?.textContent;
@@ -126,6 +126,8 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const newData = await newPage.content()
     const newDom = new JSDOM(newData)
     const newDocument = await newDom.window.document
+
+    console.log("New Document", newDocument);
 
     // const header = newDocument.querySelector('.header-promo-close-button');
     // console.log(header)
@@ -157,7 +159,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
         let scroll_location = newDocument.body.scrollHeight
         return new Promise<void>((resolve, reject) => {
             const scrollInterval = setInterval(() => {
-                window.scrollTo(0, 0)
+                window.scrollTo(0, 100)
                 clearInterval(scrollInterval)
                 resolve()
             }, 300)
@@ -191,7 +193,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
             let scroll_location = newDocument.body.scrollHeight
             return new Promise<void>((resolve, reject) => {
                 const scrollInterval = setInterval(() => {
-                    const scroll_amount = 30
+                    const scroll_amount = 20
                     window.scrollBy(0, -scroll_amount)
                     scroll_location -= scroll_amount
                     if (scroll_location <= 100) {
