@@ -128,10 +128,11 @@ async function scrapeAllPages(url: string, productType: ProductType) {
     const newDocument = newDom.window.document
 
     try {
-        const header = newDocument.querySelector('.header-promo-row');
+
+        const header = newDocument.querySelector('.header-promo-close-button');
         console.log(header)
         if(header?.children.length && header?.children.length > 0) {
-            newDocument.querySelector('.header-promo-close-button')?.dispatchEvent(new Event('click'));
+            newPage.click(".header-promo-close-button");
         }
     } catch(err) {
         console.log("error: ", err)
