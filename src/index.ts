@@ -125,7 +125,7 @@ async function scrapeAllPages(url: string, productType: ProductType) {
 
     const newData = await newPage.content()
     const newDom = new JSDOM(newData)
-    const newDocument = newDom.window.document
+    const newDocument = await newDom.window.document
 
     const header = newDocument.querySelector('.header-promo-close-button');
     console.log(header)
